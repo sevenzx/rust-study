@@ -1,5 +1,5 @@
 [package]
-name = "ch04_structs"
+name = "ch05_structs"
 version = "0.1.0"
 edition = "2021"
 
