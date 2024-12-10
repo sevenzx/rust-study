@@ -1,3 +1,12 @@
+use std::fmt::Result;
+// 使用 as 指定一个新的本地名称或者别名
+use std::io::Result as IoResult;
+
+// 嵌套路径
+// use std::cmp::Ordering;
+// use std::io;
+use std::{io, cmp::Ordering};
+
 // 我们用关键字 mod 定义一个模块
 mod front_of_house {
     // 使用 pub 关键字公有暴露路径
@@ -80,4 +89,14 @@ pub fn eat_at_restaurant2() {
     let order1 = back_of_house::Appetizer::Soup;
     let order2 = back_of_house::Appetizer::Salad;
     println!("{:?} {:?}", order1, order2)
+}
+
+fn function1() -> Result {
+    // --snip--
+    Result {}
+}
+
+fn function2() -> IoResult<()> {
+    // --snip--
+    IoResult {}
 }
