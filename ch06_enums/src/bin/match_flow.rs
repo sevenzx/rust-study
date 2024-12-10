@@ -34,7 +34,40 @@ fn main() {
     // 通配模式
     dice_game(4);
     // _占位符
-    dice_game_2(5)
+    dice_game_2(5);
+
+    // 6. if let
+    let some_u8_value = Some(3);
+    match some_u8_value {
+        Some(3) => println!("three"),
+        _ => (),
+    }
+
+    // 我们想要对 Some(3) 匹配进行操作但是不想处理任何其他 Some<u8> 值或 None 值。为了满足 match 表达式（穷尽性）的要求，
+    // 必须在处理完这唯一的成员后加上 _ => ()，这样也要增加很多样板代码。
+    //
+    // 不过我们可以使用 if let 这种更短的方式编写。如下代码与上面 match 行为一致
+
+    if let Some(3) = some_u8_value {
+        println!("three");
+    }
+
+    // if let 可以再使用else
+    let coin1 = Coin::Dime;
+    let mut count = 0;
+    match coin1 {
+        Coin::Quarter(state) => println!("State quarter from {:?}!", state),
+        _ => count += 1,
+    }
+    println!("count is {}", count);
+
+    let coin2 = Coin::Dime;
+    if let Coin::Quarter(state) = coin2 {
+        println!("State quarter from {:?}!", state);
+    } else {
+        count += 1;
+    }
+    println!("count is {}", count);
 }
 
 fn value_in_cents(coin: Coin) -> u8 {
