@@ -8,26 +8,10 @@ use std::io::Result as IoResult;
 use std::{io, cmp::Ordering};
 
 // 我们用关键字 mod 定义一个模块
-mod front_of_house {
-    // 使用 pub 关键字公有暴露路径
-    pub mod hosting {
-        pub fn add_to_waitlist() {
-            // Rust 中默认所有项（函数、方法、结构体、枚举、模块和常量）都是私有的。父模块中的项不能使用子模块中的私有项，
-            // 但是子模块中的项可以使用他们父模块中的项。这是因为子模块封装并隐藏了他们的实现详情，
-            // 但是子模块可以看到他们定义的上下文。
+// 在 mod front_of_house 后使用分号，而不是代码块，这将告诉 Rust 在另一个与模块同名的文件中加载模块的内容。
+// 下面就是在加载front_of_house.rs
+mod front_of_house;
 
-            // 1. 这里的serving不是pub的mod却可以使用 是因为可以使用父模块中的项
-            // 2. 这里使用了super关键字 我们还可以使用 super 开头来构建从父模块开始的相对路径。类似于..
-            super::serving::take_order();
-        }
-        fn seat_at_table() {}
-    }
-    mod serving {
-        pub fn take_order() {}
-        fn serve_order() {}
-        fn take_payment() {}
-    }
-}
 
 pub fn eat_at_restaurant() {
     // Absolute path
