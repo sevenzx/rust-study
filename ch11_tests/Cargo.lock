@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "ch11-tests"
+name = "ch11_tests"
 version = "0.1.0"
