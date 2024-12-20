@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fs};
 
 fn main() {
     // Rust 的运行速度、安全性、单二进制文件输出和跨平台支持使其成为创建命令行程序的绝佳选择，
@@ -14,4 +14,8 @@ fn main() {
 
     println!("Searching for {}", query);
     println!("In file {}", filename);
+
+    let content = fs::read_to_string(filename)
+        .expect("Something went wrong reading the file");
+    println!("With text:\n{}", content);
 }
