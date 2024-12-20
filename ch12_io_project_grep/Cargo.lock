@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "ch12_io_project_grep"
+name = "minigrep"
 version = "0.1.0"
