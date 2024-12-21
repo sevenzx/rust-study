@@ -7,9 +7,7 @@ fn main() {
     // grep 最简单的使用场景是在特定文件中搜索指定字符串。为此，grep 获取一个文件名和一个字符串作为参数，
     // 接着读取文件并找到其中包含字符串参数的行，然后打印出这些行。
 
-    let args: Vec<String> = env::args().collect();
-
-    let config = minigrep::Config::new(&args).unwrap_or_else(|err| {
+    let config = minigrep::Config::new(env::args()).unwrap_or_else(|err| {
         // 标准库提供了 eprintln! 宏来打印到标准错误流
         eprintln!("Problem parsing arguments: {}", err);
         process::exit(1);
