@@ -1,6 +1,38 @@
 use std::thread;
 use std::time::Duration;
 
+struct Cacher<T>
+where
+    T: Fn(u32) -> u32,
+{
+    calculation: T,
+    value: Option<u32>,
+}
+
+impl<T> Cacher<T>
+where
+    T: Fn(u32) -> u32,
+{
+    fn new(calculation: T) -> Cacher<T> {
+        Cacher {
+            calculation,
+            value: None,
+        }
+    }
+    fn value(&mut self, arg: u32) -> u32 {
+        match self.value {
+            Some(v) => v,
+            None => {
+                // 在 Rust 中，使用闭包或函数指针时，确实需要用括号()将其括起来。
+                // 这是因为 Rust 的语法要求在调用函数时明确地表明你是在调用一个函数或闭包，而不是引用它。
+                let v = (self.calculation)(arg);
+                self.value = Some(v);
+                v
+            }
+        }
+    }
+}
+
 fn main() {
     // Rust 的 闭包（closures）是可以保存进变量或作为参数传递给其他函数的匿名函数。可以在一个地方创建闭包，
     // 然后在不同的上下文中执行闭包运算。不同于函数，闭包允许捕获调用者作用域中的值。我们将展示闭包的这些功能如何复用代码和自定义行为。
@@ -27,21 +59,27 @@ fn generate_workout(intensity: u32, random_number: u32) {
     //     thread::sleep(Duration::from_secs(2));
     //     num
     // };
-    let expensive_closure = |num| {
+    // let expensive_closure = |num| {
+    //     println!("calculating slowly...");
+    //     thread::sleep(Duration::from_secs(2));
+    //     num
+    // };
+
+    let mut expensive_result = Cacher::new(|num| {
         println!("calculating slowly...");
         thread::sleep(Duration::from_secs(2));
         num
-    };
+    });
 
     if intensity < 25 {
         println!(
             "Today, do {} pushups!",
             // 调用闭包类似于调用函数
-            expensive_closure(intensity)
+            expensive_result.value(intensity)
         );
         println!(
             "Next, do {} situps!",
-            expensive_closure(intensity)
+            expensive_result.value(intensity)
         );
     } else {
         if random_number == 3 {
@@ -49,7 +87,7 @@ fn generate_workout(intensity: u32, random_number: u32) {
         } else {
             println!(
                 "Today, run for {} minutes!",
-                expensive_closure(intensity)
+                expensive_result.value(intensity)
             );
         }
     }
