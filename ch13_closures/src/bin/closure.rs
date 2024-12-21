@@ -45,6 +45,38 @@ fn main() {
         simulated_user_specified_value,
         simulated_random_number,
     );
+
+
+    // 闭包会捕获其环境
+    let x = 4;
+    // 这里，即便 x 并不是 equal_to_x 的一个参数，equal_to_x 闭包也被允许使用变量 x，因为它与 equal_to_x 定义于相同的作用域。
+    let equal_to_x = |z| z == x;
+    let y = 4;
+    assert!(equal_to_x(y));
+
+
+    // 在 Rust 中，闭包是一种可以捕获其定义时环境中变量的匿名函数。理解闭包如何捕获环境中的值及其对应的内存开销，可以帮助我们更有效地使用 Rust 的特性。
+    // 闭包的捕获方式
+    // 闭包可以通过三种方式捕获环境中的值，这些方式对应于函数参数的三种获取方式：
+    // 获取所有权：闭包通过获取值的所有权来捕获变量。此时，闭包只能被调用一次，因为它消耗了捕获的变量。实现这一特性的 trait 是 FnOnce。
+    // 可变借用：闭包以可变借用的方式捕获变量，这样它可以修改这些变量。实现这一特性的 trait 是 FnMut。
+    // 不可变借用：闭包以不可变借用的方式捕获变量，因此它只能读取这些变量，而不能修改。实现这一特性的 trait 是 Fn。
+    // Trait 解析
+    // FnOnce：允许闭包消费其捕获的变量，调用后无法再次使用这些变量。
+    // FnMut：允许闭包可变借用其捕获的变量，可以多次调用并修改这些变量。
+    // Fn：允许闭包不可变借用其捕获的变量，可以多次调用，但不能修改。
+    // 闭包与内存开销
+    // 当闭包捕获环境中的值时，会引入额外的内存开销。例如，如果一个闭包需要持有一个大数据结构的所有权，
+    // 那么在调用这个闭包时就会消耗相应的内存资源。如果不需要闭包捕获环境中的值，使用普通函数将不会产生这样的开销。
+    // 使用 move 关键字
+    // 如果希望强制闭包获取其使用的环境值的所有权，可以在定义闭包时使用 move 关键字。这在需要将数据传递到新线程或返回闭包时特别有用。
+
+    //
+    // let x = vec![1, 2, 3];
+    // let equal_to_x = move |z| z == x;
+    // println!("can't use x here: {:?}", x);
+    // let y = vec![1, 2, 3];
+    // assert!(equal_to_x(y));
 }
 
 fn generate_workout(intensity: u32, random_number: u32) {
@@ -71,8 +103,6 @@ fn generate_workout(intensity: u32, random_number: u32) {
         thread::sleep(Duration::from_secs(2));
         num
     });
-
-    expensive_result.value(2);
 
     if intensity < 25 {
         println!(
