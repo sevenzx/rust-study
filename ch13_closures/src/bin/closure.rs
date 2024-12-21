@@ -15,17 +15,24 @@ fn main() {
 }
 
 fn generate_workout(intensity: u32, random_number: u32) {
-    let expensive_result =
-        simulated_expensive_calculation(intensity);
+    // 闭包的定义
+    // 闭包的定义以一对竖线（|）开始，在竖线中指定闭包的参数；之所以选择这个语法是因为它与 Smalltalk 和 Ruby 的闭包定义类似。
+    // 这个闭包有一个参数 num；如果有多于一个参数，可以使用逗号分隔，比如 |param1, param2|。
+    let expensive_closure = |num| {
+        println!("calculating slowly...");
+        thread::sleep(Duration::from_secs(2));
+        num
+    };
 
     if intensity < 25 {
         println!(
             "Today, do {} pushups!",
-            expensive_result
+            // 调用闭包类似于调用函数
+            expensive_closure(intensity)
         );
         println!(
             "Next, do {} situps!",
-            expensive_result
+            expensive_closure(intensity)
         );
     } else {
         if random_number == 3 {
@@ -33,15 +40,8 @@ fn generate_workout(intensity: u32, random_number: u32) {
         } else {
             println!(
                 "Today, run for {} minutes!",
-                expensive_result
+                expensive_closure(intensity)
             );
         }
     }
-}
-
-// 模拟耗时的计算
-fn simulated_expensive_calculation(intensity: u32) -> u32 {
-    println!("calculating slowly...");
-    thread::sleep(Duration::from_secs(2));
-    intensity
 }
