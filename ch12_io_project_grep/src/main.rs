@@ -10,15 +10,20 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     let config = minigrep::Config::new(&args).unwrap_or_else(|err| {
-        println!("Problem parsing arguments: {}", err);
+        // 标准库提供了 eprintln! 宏来打印到标准错误流
+        eprintln!("Problem parsing arguments: {}", err);
         process::exit(1);
     });
 
     if let Err(e) = minigrep::run(config) {
-        println!("Application error: {}", e);
+        eprintln!("Application error: {}", e);
 
         process::exit(1);
     }
+
+    // 将错误信息输出到标准错误而不是标准输出
+    // cargo run > output.txt
+    // cargo run to poem.txt > output.txt
 }
 
 
