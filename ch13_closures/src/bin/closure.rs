@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::thread;
 use std::time::Duration;
 
@@ -6,7 +7,7 @@ where
     T: Fn(u32) -> u32,
 {
     calculation: T,
-    value: Option<u32>,
+    value: HashMap<u32, u32>,
 }
 
 impl<T> Cacher<T>
@@ -16,17 +17,17 @@ where
     fn new(calculation: T) -> Cacher<T> {
         Cacher {
             calculation,
-            value: None,
+            value: HashMap::new(),
         }
     }
     fn value(&mut self, arg: u32) -> u32 {
-        match self.value {
-            Some(v) => v,
+        match self.value.get(&arg) {
+            Some(v) => *v,
             None => {
                 // 在 Rust 中，使用闭包或函数指针时，确实需要用括号()将其括起来。
                 // 这是因为 Rust 的语法要求在调用函数时明确地表明你是在调用一个函数或闭包，而不是引用它。
                 let v = (self.calculation)(arg);
-                self.value = Some(v);
+                self.value.insert(arg, v);
                 v
             }
         }
@@ -70,6 +71,8 @@ fn generate_workout(intensity: u32, random_number: u32) {
         thread::sleep(Duration::from_secs(2));
         num
     });
+
+    expensive_result.value(2);
 
     if intensity < 25 {
         println!(
